@@ -1,0 +1,32 @@
+name: Train GPT-2 LLM
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - training/train_gpt2.py
+      - requirements.txt
+      - .github/workflows/train-llm.yml
+
+jobs:
+  train-llm:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Run training script
+        run: |
+          python training/train_gpt2.py
+      - name: Upload model artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: polaris-pm1
+          path: models/polaris-pm1/
